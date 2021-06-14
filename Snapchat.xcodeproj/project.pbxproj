@@ -19,6 +19,7 @@
 		A09C3875267048950046A9E1 /* Usuario.swift in Sources */ = {isa = PBXBuildFile; fileRef = A09C3874267048950046A9E1 /* Usuario.swift */; };
 		A0E482D5266810B100B54FD0 /* IniciarSesionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0E482D4266810B100B54FD0 /* IniciarSesionViewController.swift */; };
 		A0ED56342670665300215425 /* RegistrarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0ED56332670665300215425 /* RegistrarViewController.swift */; };
+		A0F83C0F2677CFC1004B27CD /* Snap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F83C0E2677CFC1004B27CD /* Snap.swift */; };
 		B242869FD2440A36F7AA8287 /* Pods_Snapchat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 59122131FA37DFDA8ECD2257 /* Pods_Snapchat.framework */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,7 @@
 		A09C3874267048950046A9E1 /* Usuario.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Usuario.swift; sourceTree = "<group>"; };
 		A0E482D4266810B100B54FD0 /* IniciarSesionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IniciarSesionViewController.swift; sourceTree = "<group>"; };
 		A0ED56332670665300215425 /* RegistrarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrarViewController.swift; sourceTree = "<group>"; };
+		A0F83C0E2677CFC1004B27CD /* Snap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Snap.swift; sourceTree = "<group>"; };
 		D8E08579E50712B8544B02BC /* Pods-Snapchat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Snapchat.release.xcconfig"; path = "Target Support Files/Pods-Snapchat/Pods-Snapchat.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,6 +125,7 @@
 			isa = PBXGroup;
 			children = (
 				A09C3874267048950046A9E1 /* Usuario.swift */,
+				A0F83C0E2677CFC1004B27CD /* Snap.swift */,
 			);
 			path = Modelos;
 			sourceTree = "<group>";
@@ -263,6 +266,7 @@
 			files = (
 				A09C386C266FF1750046A9E1 /* SnapsViewController.swift in Sources */,
 				A09C386E266FF8230046A9E1 /* ImagenViewController.swift in Sources */,
+				A0F83C0F2677CFC1004B27CD /* Snap.swift in Sources */,
 				A0ED56342670665300215425 /* RegistrarViewController.swift in Sources */,
 				A09C3875267048950046A9E1 /* Usuario.swift in Sources */,
 				A0E482D5266810B100B54FD0 /* IniciarSesionViewController.swift in Sources */,
