@@ -217,11 +217,18 @@
                         <viewLayoutGuide key="safeArea" id="w7z-Ep-n5g"/>
                     </view>
                     <navigationItem key="navigationItem" title="Enviar Mensaje" id="YCm-FG-wtX">
-                        <barButtonItem key="rightBarButtonItem" systemItem="camera" id="bsM-So-qqm">
-                            <connections>
-                                <action selector="camaraTapped:" destination="4gp-w2-A3I" id="e3M-7W-E79"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="camera" id="bsM-So-qqm">
+                                <connections>
+                                    <action selector="camaraTapped:" destination="4gp-w2-A3I" id="e3M-7W-E79"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="organize" id="Wrw-IV-ceX">
+                                <connections>
+                                    <action selector="mediaTapped:" destination="4gp-w2-A3I" id="kwr-ab-AwD"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="descripcionTextField" destination="IPS-W7-Whe" id="jsm-ld-Q2p"/>

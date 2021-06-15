@@ -38,7 +38,7 @@ class ElegirUsuarioViewController: UIViewController,UITableViewDataSource,UITabl
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let usuario = usuarios[indexPath.row]
-        let snap = ["from" : usuario.email, "descripcion": descrip, "imagenURL": imagenURL, "imagenID":imagenID]
+        let snap = ["from" : Auth.auth().currentUser?.email, "descripcion": descrip, "imagenURL": imagenURL, "imagenID":imagenID]
         Database.database().reference().child("usuarios").child(usuario.uid).child("snaps").childByAutoId().setValue(snap)
         navigationController?.popViewController(animated: true)
     }
