@@ -5,6 +5,7 @@ import FirebaseStorage
 class ImagenViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var imagePicker = UIImagePickerController()
+    var imagenID = NSUUID().uuidString
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var descripcionTextField: UITextField!
@@ -26,7 +27,7 @@ class ImagenViewController: UIViewController, UIImagePickerControllerDelegate, U
         self.elegirContactoBoton.isEnabled = false
         let imagenesFolder = Storage.storage().reference().child("imagenes")
         let imagenData = imageView.image?.jpegData(compressionQuality: 0.50)
-        let cargarImagen = imagenesFolder.child("\(NSUUID().uuidString).jpg")
+        let cargarImagen = imagenesFolder.child("\(imagenID).jpg")
         cargarImagen.putData(imagenData!, metadata: nil) { (metadata,error) in
             if error != nil {
                 self.mostrarAlerta(titulo: "ERROR", mensaje: "Se produjo un error al subir la imagen. Verifique su conexion a internet y vuelva a intentarlo", accion: "Aceptar")
@@ -77,6 +78,7 @@ class ImagenViewController: UIViewController, UIImagePickerControllerDelegate, U
         let siguienteVC = segue.destination as! ElegirUsuarioViewController
         siguienteVC.imagenURL = sender as! String
         siguienteVC.descrip = descripcionTextField.text!
+        siguienteVC.imagenID = imagenID
     }
     
     func mostrarAlerta(titulo: String, mensaje: String, accion: String) {
