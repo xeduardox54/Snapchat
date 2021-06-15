@@ -1,12 +1,20 @@
 import UIKit
 import Firebase
 import FirebaseStorage
+import AVFoundation
 
 class ImagenViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     var imagePicker = UIImagePickerController()
     var imagenID = NSUUID().uuidString
+    var grabarAudio:AVAudioRecorder?
+    var reproducirAudio:AVAudioPlayer?
+    var audioID = NSUUID().uuidString
+    var audioURL:URL?
+    var cargarAudioURL:URL?
 
+    @IBOutlet weak var grabar: UIButton!
+    @IBOutlet weak var reproducir: UIButton!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var descripcionTextField: UITextField!
     @IBOutlet weak var elegirContactoBoton: UIButton!
@@ -15,7 +23,35 @@ class ImagenViewController: UIViewController, UIImagePickerControllerDelegate, U
         super.viewDidLoad()
         imagePicker.delegate = self
         elegirContactoBoton.isEnabled = false
+        configurarGrabacion()
     }
+    
+    func configurarGrabacion(){
+           do{
+               let session = AVAudioSession.sharedInstance()
+               try session.setCategory(AVAudioSession.Category.playAndRecord, mode: AVAudioSession.Mode.default, options: [])
+               try session.overrideOutputAudioPort(.speaker)
+               try session.setActive(true)
+               
+               let basePath:String = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+               let pathComponents = [basePath, "audio.m4a"]
+               audioURL = NSURL.fileURL(withPathComponents: pathComponents)!
+               
+               print("*************************")
+               print(audioURL!)
+               print("*************************")
+               
+               var settings:[String:AnyObject] = [:]
+               settings[AVFormatIDKey] = Int(kAudioFormatMPEG4AAC) as AnyObject?
+               settings[AVSampleRateKey] = 44100.0 as AnyObject?
+               settings[AVNumberOfChannelsKey] = 2 as AnyObject?
+               
+               grabarAudio = try AVAudioRecorder(url: audioURL!, settings: settings)
+               grabarAudio!.prepareToRecord()
+           }catch let error as NSError{
+               print(error)
+           }
+       }
 
     @IBAction func camaraTapped(_ sender: Any) {
         imagePicker.sourceType = .camera
@@ -29,8 +65,48 @@ class ImagenViewController: UIViewController, UIImagePickerControllerDelegate, U
         present(imagePicker, animated: true, completion: nil)
     }
     
+    @IBAction func grabarTapped(_ sender: Any) {
+        if grabarAudio!.isRecording{
+            grabarAudio?.stop()
+            grabar.setTitle("GRABAR", for: .normal)
+            reproducir.isEnabled = true
+        }else{
+            grabarAudio?.record()
+            grabar.setTitle("DETENER", for: .normal)
+            reproducir.isEnabled = false
+        }
+    }
+    
+    @IBAction func reproducirTapped(_ sender: Any) {
+        do{
+            try reproducirAudio = AVAudioPlayer(contentsOf: audioURL!)
+            reproducirAudio!.play()
+            print("Reproduciendo")
+        } catch {}
+    }
+    
     @IBAction func elegirContactoTapped(_ sender: Any) {
         self.elegirContactoBoton.isEnabled = false
+        
+        let audioFolder = Storage.storage().reference().child("audios")
+        let cargarAudio = audioFolder.child("\(audioID).mp3")
+        cargarAudio.putFile(from: audioURL!, metadata: nil){ (metadata,error) in
+            if error != nil {
+                self.mostrarAlerta(titulo: "ERROR", mensaje: "Se produjo un error al subir el audio. Verifique su conexion a internet y vuelva a intentarlo", accion: "Aceptar")
+                print("Ocurrio un error al subir audio \(error)")
+                return
+            }else{
+                cargarAudio.downloadURL(completion: {(url, error) in
+                    guard let enlaceURL = url else{
+                        self.mostrarAlerta(titulo: "Error", mensaje: "Se produjo un error al obtener informacion de audio", accion: "Cancelar")
+                        print("Ocurrio un error al subir audio: \(error)")
+                        return
+                    }
+                    self.cargarAudioURL = url
+                })
+            }
+        }
+        
         let imagenesFolder = Storage.storage().reference().child("imagenes")
         let imagenData = imageView.image?.jpegData(compressionQuality: 0.50)
         let cargarImagen = imagenesFolder.child("\(imagenID).jpg")
@@ -52,24 +128,6 @@ class ImagenViewController: UIViewController, UIImagePickerControllerDelegate, U
             })
             }
         }
-        /*
-        let alertaCarga = UIAlertController(title: "Cargando Imagen ...", message: "0%", preferredStyle: .alert)
-        let progresoCarga : UIProgressView = UIProgressView(progressViewStyle: .default)
-        cargarImagen.observe(.progress) { (snapshot) in
-            let porcentaje = Double(snapshot.progress!.completedUnitCount) / Double(snapshot.progress!.completedUnitCount)
-            print(porcentaje)
-            progresoCarga.setProgress(Float(porcentaje), animated: true)
-            progresoCarga.frame = CGRect(x: 10, y: 70, width: 250, height: 0)
-            alertaCarga.message = String(round(porcentaje*100.0)) + " %"
-            if porcentaje >= 1.0 {
-                alertaCarga.dismiss(animated: true, completion: nil)
-            }
-        }
-        let btnOK = UIAlertAction(title:"Aceptar", style: .default, handler: nil)
-        alertaCarga.addAction(btnOK)
-        alertaCarga.view.addSubview(progresoCarga)
-        present(alertaCarga, animated: true, completion: nil)
-    */
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
@@ -85,6 +143,8 @@ class ImagenViewController: UIViewController, UIImagePickerControllerDelegate, U
         siguienteVC.imagenURL = sender as! String
         siguienteVC.descrip = descripcionTextField.text!
         siguienteVC.imagenID = imagenID
+        siguienteVC.audioURL = cargarAudioURL!.absoluteString
+        siguienteVC.audioID = audioID
     }
     
     func mostrarAlerta(titulo: String, mensaje: String, accion: String) {
