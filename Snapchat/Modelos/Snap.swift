@@ -4,4 +4,5 @@ class Snap{
     var imagenURL = ""
     var descrip = ""
     var from = ""
+    var id = ""
 }

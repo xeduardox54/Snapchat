@@ -1,5 +1,6 @@
 import UIKit
 import SDWebImage
+import Firebase
 
 class VerSnapViewController: UIViewController {
 
@@ -11,6 +12,10 @@ class VerSnapViewController: UIViewController {
         super.viewDidLoad()
         lblMensaje.text = "Mensaje :" + snap.descrip
         imageView.sd_setImage(with: URL(string: snap.imagenURL), completed: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        Database.database().reference().child("usuarios").child((Auth.auth().currentUser?.uid)!).child("snaps").child(snap.id).removeValue()
     }
 
 }
